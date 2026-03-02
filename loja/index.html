@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Americanas 96 Anos</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root{
+      --brand:#f80030;
+      --brandDark:#cc0b2e;
+      --txt:#1f2a37;
+      --muted:#6b7280;
+      --bg:#f3f4f6;
+      --card:#ffffff;
+      --border:#e5e7eb;
+      --shadow:0 8px 20px rgba(0,0,0,.06);
+      --shadowHover:0 14px 30px rgba(0,0,0,.10);
+      --radius:14px;
+      --star:#fbbf24;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .header {
+      background: var(--brand);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header img { height: 28px; }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .header-icons .icon-header {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      cursor: pointer;
+      filter: brightness(100);
+      opacity: .95;
+    }
+
+    .search-bar {
+      padding: 12px 16px;
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      outline: none;
+      font-size: 14px;
+    }
+    .search-bar input:focus{
+      border-color:#fca5a5;
+      box-shadow: 0 0 0 4px rgba(248,0,48,.10);
+    }
+
+    /* ======== (2) BANNER ABAIXO DA PESQUISA (830x230) ======== */
+    .top-banner-wrap{
+      background:#fff;
+      border-bottom: 1px solid #eee;
+      padding: 10px 16px 14px;
+    }
+    .top-banner{
+      width: 100%;
+      max-width: 830px;         /* alvo desktop */
+      aspect-ratio: 830 / 230;  /* 830x230 */
+      height: auto;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(229,231,235,.9);
+      box-shadow: 0 6px 14px rgba(0,0,0,.06);
+      background:#fff;
+    }
+    .top-banner img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit: cover; /* mantém preenchido e responsivo */
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: #777;
+      padding: 12px 16px 4px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      padding: 4px 16px 12px;
+      color: #111;
+      letter-spacing: .2px;
+    }
+
+    /* ======== GRID MELHORADO (APENAS PRODUTOS) ======== */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 0 16px 40px;
+    }
+    @media (min-width: 720px){
+      .product-grid{
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1040px;
+        margin: 0 auto;
+      }
+    }
+
+    .product-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(229,231,235,.7);
+      overflow: hidden;
+      text-align: left;
+      position: relative;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .product-card:hover{
+      transform: translateY(-2px);
+      box-shadow: var(--shadowHover);
+    }
+
+    .unavailable{
+      opacity: .55;
+      filter: grayscale(.05);
+    }
+
+    /* Badge estilo marketplace */
+    .badge-desconto {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(135deg, var(--brand), var(--brandDark));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(248,0,48,.25);
+      z-index: 5;
+      letter-spacing:.2px;
+    }
+
+    /* ======== NOVO: selo "Mais vendido" acima do nome ======== */
+    .selo-mais-vendido{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(229,231,235,.95);
+      background: #fff;
+      color:#111827;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.06);
+      margin-bottom: 8px;
+    }
+    .selo-mais-vendido svg{
+      width: 14px;
+      height: 14px;
+      fill: var(--brand);
+      flex: 0 0 auto;
+    }
+
+    /* Área do carrossel */
+    .product-media{
+      position: relative;
+      background: #fff;
+      padding: 10px 10px 0;
+    }
+
+    .carousel{
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .carousel-track{
+      display: flex;
+      height: 100%;
+      transition: transform .35s ease;
+      will-change: transform;
+      touch-action: pan-y;
+    }
+
+    .carousel-slide{
+      min-width: 100%;
+      height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fff;
+    }
+
+    /* ======== (1) IMAGEM PREENCHENDO O QUADRADO (1080x1080) ======== */
+    .carousel-slide img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;   /* preenche */
+      padding: 0;          /* sem borda interna */
+      display:block;
+    }
+
+    .carousel-btn{
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 6px 14px rgba(0,0,0,.12);
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity: 0;
+      transition: opacity .18s ease;
+      z-index: 6;
+    }
+    .product-card:hover .carousel-btn{
+      opacity: 1;
+    }
+    .carousel-btn:active{ transform: translateY(-50%) scale(.98); }
+
+    .carousel-btn.prev{ left: 10px; }
+    .carousel-btn.next{ right: 10px; }
+
+    .carousel-btn svg{
+      width: 18px; height: 18px;
+      fill:#111;
+    }
+
+    .carousel-dots{
+      display:flex;
+      justify-content:center;
+      gap:6px;
+      padding: 10px 0 6px;
+    }
+    .dot{
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #d1d5db;
+      border: none;
+    }
+    .dot.active{ background: var(--brand); }
+
+    /* Conteúdo do card */
+    .product-body{
+      padding: 10px 12px 12px;
+    }
+
+    .product-name {
+      font-size: 13.5px;
+      line-height: 1.2;
+      font-weight: 800;
+      color: #111827;
+      min-height: 34px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ======== (3) AVALIAÇÕES ======== */
+    .rating{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-top: 6px;
+    }
+    .stars{
+      display:flex;
+      gap:2px;
+      line-height:0;
+    }
+    .star{
+      width: 14px;
+      height: 14px;
+      fill: var(--star);
+      flex: 0 0 auto;
+    }
+    .rating-number{
+      font-size: 12px;
+      font-weight: 800;
+      color:#374151;
+    }
+
+    .price-block{
+      margin-top: 10px;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .product-price {
+      color: #C8102E;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+
+    .sub-price{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .btn-add {
+      margin-top: 12px;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 12px;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: filter .15s ease, transform .12s ease;
+    }
+    .btn-add:hover{ filter: brightness(.95); }
+    .btn-add:active{ transform: scale(.99); }
+
+    .btn-unavailable {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    /* Pop-ups (mantidos) */
+    .popup-container {
+      position: fixed;
+      left: 10px;
+      bottom: 10px;
+      background: rgba(200, 16, 46, 0.95);
+      border-left: 4px solid #f80030;
+      border-radius: 10px;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateX(-100%);
+      animation-fill-mode: forwards;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      z-index: 999;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    .popup-foto {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #f80030;
+    }
+
+    .popup-text span {
+      font-size: 13px;
+      color: #fff;
+      display: block;
+      margin-top: 2px;
+    }
+
+    @keyframes fadeOutUp {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-100%); }
+    }
+
+    footer {
+      background:#eee;
+      padding: 24px 16px;
+      font-size: 14px;
+      color:#333;
+    }
+    footer a {
+      color: #333;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .selo-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .selo-container img {
+      width: 60px;
+      height: auto;
+    }
+  </style>
+
+</head>
+<body>
+
+<script>
+  window.pixelId = "6948cc7707341f9e35946323";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+
+  <script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  data-utmify-prevent-xcod-sck
+  data-utmify-prevent-subids
+  async
+  defer
+></script>
+
+
+  <div class="header">
+    <img src="/loja/images/americanas.png" alt="Logo Americanas">
+    <div class="header-icons">
+      <img src="/loja/images/loja.svg" alt="Perfil" class="icon-header">
+      <img src="/loja/images/coracao.svg" alt="Favoritos" class="icon-header">
+      <img src="/loja/images/carrinho.svg" alt="Carrinho" class="icon-header">
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" placeholder="O que você procura?">
+  </div>
+
+  <!-- (2) Banner abaixo do bloco de pesquisa (830x230) -->
+  <div class="top-banner-wrap">
+    <div class="top-banner">
+      <!-- troque o src pelo seu banner (ideal 830x230) -->
+      <img src="/loja/images/banneramericanas3.png" alt="Banner">
+    </div>
+  </div>
+
+  <div class="breadcrumb">Home > <strong>Premium</strong></div>
+  <div class="section-title">Linha Premium</div>
+
+  <div class="product-grid">
+
+    <!-- 1) Indisponível -->
+    <div class="product-card unavailable">
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/celular1.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+
+        <div class="product-name">Smartphone Motorola Moto G56 5G 256GB 24GB (8GB RAM+16GB Ram Boost) e 50MP Sony Lytia 600 AI</div>
+
+        <!-- (3) Avaliação -->
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <button class="btn-add btn-unavailable" disabled>Indisponível</button>
+      </div>
+    </div>
+
+    <!-- 2) Kit Paz -->
+    <div class="product-card">
+      <!-- (1) Desconto 80% OFF -->
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/airfryer1.webp,/loja/images/airfryer2.webp,/loja/images/airfryer3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+        <!-- selo "Mais vendido" -->
+        <div class="selo-mais-vendido" aria-label="Mais vendido">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.39 6.98L22 9.24l-5.99 4.37L18.18 21 12 16.9 5.82 21l2.17-7.39L2 9.24l7.61-.26L12 2z"/></svg>
+          Mais vendido
+        </div>
+
+        <div class="product-name">Air Fryer Mondial Family Inox Fritadeira sem Óleo 4L Antiaderente Cesto Removivel 200ºC 1500W PRETO/INOX 220V</div>
+
+        <!-- (3) Avaliação -->
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 414,43</div>
+          <div class="product-price">por R$ 88,72</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/1dd8985d-7a2c-4386-a69d-5e210041f78d'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 3) Kit Sadia Bassi -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/tv1.webp,/loja/images/tv2.webp,/loja/images/tv3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+
+        <div class="product-name">Smart TV 50" LG 4K Ultra HD 50UA8550PSA webOS 25 AI Processor 4K Gen8 com Alexa 3 HDMI</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 3398,90</div>
+          <div class="product-price">por R$ 266,92</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/6679ba46-7720-43ee-81d6-02deaf30acea'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 4) Kit Harmonia -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/fritadeira1.webp,/loja/images/fritadeira2.webp,/loja/images/fritadeira3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+        <!-- selo "Mais vendido" -->
+        <div class="selo-mais-vendido" aria-label="Mais vendido">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.39 6.98L22 9.24l-5.99 4.37L18.18 21 12 16.9 5.82 21l2.17-7.39L2 9.24l7.61-.26L12 2z"/></svg>
+          Mais vendido
+        </div>
+
+        <div class="product-name">Fritadeira Elétrica Air Fryer Mondial Forno Oven 12L 2000W Preto/Inox 2000W AFON-12L-BI - 110v</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 749,90</div>
+          <div class="product-price">por R$ 69,56</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/4729287f-1e47-4f0d-a239-81a974c0b2f1'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 5) Indisponível -->
+    <div class="product-card unavailable">
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/pampers1.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+    
+
+        <div class="product-name">Fralda Pampers Confort Sec P 50 Unidades</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <button class="btn-add btn-unavailable" disabled>Indisponível</button>
+      </div>
+    </div>
+
+    <!-- 6) Indisponível -->
+    <div class="product-card unavailable">
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/caixabombom.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+
+        
+        <div class="product-name">Caixa de Bombom Especialidades Nestlé 251g</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <button class="btn-add btn-unavailable" disabled>Indisponível</button>
+      </div>
+    </div>
+
+    <!-- 7) Kit Luz -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/fogao1.webp,/loja/images/fogao2.webp,/loja/images/fogao3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+
+        <div class="product-name">Fogão Brastemp 4 Bocas Branco com Dupla Chama e Grades Individuais - BFO4EBB - Bivolt</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ R$2.096,00</div>
+          <div class="product-price">por R$ 206,47</div>
+          <div class="sub-price">Frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/b45143d8-7bd0-4ab0-a578-ba7080c665a6'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 8) Kit Amor -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/arvore1.webp,/loja/images/arvore2.webp,/loja/images/arvore3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+      
+
+        <div class="product-name">Árvore de Natal Pinheiro Canadense 1,8m Verde - Festive</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 309,90</div>
+          <div class="product-price">por R$ 37,46</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/ff0091e2-b829-4c6d-b328-c5586a2f795e'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 9) Indisponível -->
+    <div class="product-card unavailable">
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/pringles.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+       
+
+        <div class="product-name">Batata Pringles Original 104g</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <button class="btn-add btn-unavailable" disabled>Indisponível</button>
+      </div>
+    </div>
+
+    <!-- 10) Indisponível -->
+    <div class="product-card unavailable">
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/notebook.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+
+      <div class="product-body">
+       
+
+        <div class="product-name">Notebook Lenovo IdeaPad 1 15IRU7 Intel Core i3-1315U 8GB 256GB SSD Linux 15.6" - 83QJS00000 Cloud Grey</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <button class="btn-add btn-unavailable" disabled>Indisponível</button>
+      </div>
+    </div>
+
+    <!-- ======= NOVOS PRODUTOS (11 a 15) ======= -->
+
+    <!-- 11) DISPONÍVEL -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/geladeira1.webp,/loja/images/geladeira2.webp,/loja/images/geladeira3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+      <div class="product-body">
+       
+
+        <div class="product-name">Geladeira Brastemp Frost Free Duplex 400 litros com Espaço Adapt BRM54JKANA</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 3.999,90</div>
+          <div class="product-price">por R$ 593,89</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/d35eb013-13f1-4254-ad36-c8f1ec447aa8'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 12) DISPONÍVEL -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/lavadora1.webp,/loja/images/lavadora2.webp,/loja/images/lavadora3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+      <div class="product-body">
+       
+
+        <div class="product-name">Lavadora de Roupas Electrolux 11kg Essential Care LED Branca - LES11</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 2.399,90</div>
+          <div class="product-price">por R$ 419,43</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/cc894060-7b0f-4d81-8d79-49cb93cdcde1'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 13) DISPONÍVEL -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/console1.webp,/loja/images/console2.webp,/loja/images/console3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+      <div class="product-body">
+       
+        <div class="product-name">Console PlayStation 5 Slim 1TB + 1 Controle DualSense</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 4.499,90</div>
+          <div class="product-price">por R$ 352,56</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/579e7a41-2eed-4214-89ba-02201637a723'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 14) DISPONÍVEL -->
+    <div class="product-card">
+      <span class="badge-desconto">80% OFF</span>
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/cafeteira1.webp,/loja/images/cafeteira2.webp,/loja/images/cafeteira3.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+      <div class="product-body">
+        <!-- selo "Mais vendido" -->
+        <div class="selo-mais-vendido" aria-label="Mais vendido">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.39 6.98L22 9.24l-5.99 4.37L18.18 21 12 16.9 5.82 21l2.17-7.39L2 9.24l7.61-.26L12 2z"/></svg>
+          Mais vendido
+        </div>
+
+        <div class="product-name">Cafeteira Nespresso Essenza Mini + 30 Cápsulas (Edição Especial)</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <div class="price-block">
+          <div class="old-price">de R$ 899,90</div>
+          <div class="product-price">por R$ 92,93</div>
+          <div class="sub-price">frete calculado no checkout</div>
+        </div>
+        <button class="btn-add" onclick="window.location.href='https://www.pay-pagamentos.link/checkout/a95a423f-4a2d-422c-b49b-6734c0500013'">
+          Resgatar
+        </button>
+      </div>
+    </div>
+
+    <!-- 15) INDISPONÍVEL -->
+    <div class="product-card unavailable">
+      <div class="product-media">
+        <div class="carousel" data-images="/loja/images/fone1.webp">
+          <div class="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" aria-label="Anterior">
+            <svg viewBox="0 0 24 24"><path d="M15.5 19a1 1 0 0 1-.7-.29l-6-6a1 1 0 0 1 0-1.42l6-6a1 1 0 1 1 1.4 1.42L11.91 12l4.29 4.29A1 1 0 0 1 15.5 19z"/></svg>
+          </button>
+          <button class="carousel-btn next" type="button" aria-label="Próximo">
+            <svg viewBox="0 0 24 24"><path d="M8.5 19a1 1 0 0 1-.7-1.71L12.09 12 7.8 7.71A1 1 0 1 1 9.2 6.29l6 6a1 1 0 0 1 0 1.42l-6 6A1 1 0 0 1 8.5 19z"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+      <div class="product-body">
+
+        <div class="product-name">Fone Bluetooth JBL Tune 510BT com Microfone e Até 40h de Bateria</div>
+
+        <div class="rating" data-rating>
+          <div class="stars" aria-label="Avaliação">
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <div class="rating-number">4.9</div>
+        </div>
+
+        <button class="btn-add btn-unavailable" disabled>Indisponível</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Notificações (mantidas) -->
+  <div class="popup-container" style="animation: fadeOutUp 8s 3s forwards;">
+    <img src="/loja/images/foto1.jpg" class="popup-foto">
+    <div class="popup-text">
+      <strong>Juliana Mendes</strong><br>
+      <span>Comprou 2 Air Fryer Mondial</span>
+    </div>
+  </div>
+
+  <div class="popup-container" style="animation: fadeOutUp 8s 15s forwards;">
+    <img src="/loja/images/foto2.jpg" class="popup-foto">
+    <div class="popup-text">
+      <strong>Renata Souza</strong><br>
+      <span>Comprou 1 Geladeira Brastemp</span>
+    </div>
+  </div>
+
+  <div class="popup-container" style="animation: fadeOutUp 8s 27s forwards;">
+    <img src="/loja/images/foto3.jpg" class="popup-foto">
+    <div class="popup-text">
+      <strong>Ana Luiza</strong><br>
+      <span>Comprou 1 Air Fryer Mondial</span>
+    </div>
+  </div>
+
+  <div class="popup-container" style="animation: fadeOutUp 8s 39s forwards;">
+    <img src="/loja/images/foto4.jpg" class="popup-foto">
+    <div class="popup-text">
+      <strong>João Pedro</strong><br>
+      <span>Comprou 1 Fogão Brastemp</span>
+    </div>
+  </div>
+
+  <!-- Rodapé (mantido) -->
+  <footer>
+    <div style="margin-bottom: 20px;">
+      <strong>INSTITUCIONAL</strong><br>
+      <a href="#">Sobre o Kit</a>
+      <a href="#">Quem somos</a>
+      <a href="#">Para empresa</a>
+      <a href="#">Política de privacidade</a>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <strong>ATENDIMENTO</strong><br>
+      americanas@promo96anos.com<br>
+      0800 721 7621<br>
+      De segunda a sexta-feira<br>
+      Das 8h às 18h - Horário de Brasília
+    </div>
+
+    <div class="selo-container">
+      <img src="/loja/images/selo1.png" alt="Selo 10 Anos">
+      <img src="/loja/images/selo2.png" alt="Selo Fornecedores">
+      <img src="/loja/images/selo3.png" alt="Empresa Verificada">
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const carousels = document.querySelectorAll(".carousel");
+
+      carousels.forEach((carousel) => {
+        const track = carousel.querySelector(".carousel-track");
+        const dotsWrap = carousel.parentElement.querySelector(".carousel-dots");
+        const prevBtn = carousel.querySelector(".prev");
+        const nextBtn = carousel.querySelector(".next");
+
+        const images = (carousel.getAttribute("data-images") || "")
+          .split(",")
+          .map(s => s.trim())
+          .filter(Boolean);
+
+        // fallback para 1 imagem vazia
+        const imgs = images.length ? images : [""];
+
+        // build slides
+        track.innerHTML = imgs.map(src => `
+          <div class="carousel-slide">
+            <img src="${src}" alt="">
+          </div>
+        `).join("");
+
+        // build dots
+        dotsWrap.innerHTML = imgs.map((_, i) => `
+          <button class="dot ${i === 0 ? "active" : ""}" type="button" aria-label="Ir para imagem ${i+1}"></button>
+        `).join("");
+
+        const dots = Array.from(dotsWrap.querySelectorAll(".dot"));
+        let idx = 0;
+        let startX = 0;
+        let dragging = false;
+        let autoplayTimer = null;
+
+        function setIndex(newIdx){
+          idx = (newIdx + imgs.length) % imgs.length;
+          track.style.transform = `translateX(-${idx * 100}%)`;
+          dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+        }
+
+        function next(){ setIndex(idx + 1); }
+        function prev(){ setIndex(idx - 1); }
+
+        // hide controls if single image
+        if (imgs.length <= 1){
+          prevBtn.style.display = "none";
+          nextBtn.style.display = "none";
+          dotsWrap.style.display = "none";
+        }
+
+        prevBtn.addEventListener("click", prev);
+        nextBtn.addEventListener("click", next);
+
+        dots.forEach((d, i) => d.addEventListener("click", () => setIndex(i)));
+
+        // touch swipe
+        carousel.addEventListener("pointerdown", (e) => {
+          dragging = true;
+          startX = e.clientX;
+          carousel.setPointerCapture(e.pointerId);
+        });
+
+        carousel.addEventListener("pointerup", (e) => {
+          if (!dragging) return;
+          dragging = false;
+          const dx = e.clientX - startX;
+          if (Math.abs(dx) > 35){
+            dx < 0 ? next() : prev();
+          }
+        });
+
+        // autoplay leve (só se tiver mais de 1)
+        function startAutoplay(){
+          if (imgs.length <= 1) return;
+          stopAutoplay();
+          autoplayTimer = setInterval(next, 3500);
+        }
+        function stopAutoplay(){
+          if (autoplayTimer) clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+
+        carousel.addEventListener("mouseenter", stopAutoplay);
+        carousel.addEventListener("mouseleave", startAutoplay);
+
+        startAutoplay();
+      });
+
+      // ======== (3) Ratings variando 4.7 a 5.0 ========
+      const ratingEls = document.querySelectorAll(".rating[data-rating]");
+      ratingEls.forEach((el) => {
+        const r = Math.min(5.0, 4.7 + (Math.random() * 0.3));
+        const rating = (Math.round(r * 10) / 10).toFixed(1);
+        const num = el.querySelector(".rating-number");
+        if (num) num.textContent = rating;
+      });
+    })();
+  </script>
+
+</body>
+</html>
