@@ -907,7 +907,7 @@ mr-1 { margin-right: .25rem; }
 .bg-muted { background-color: hsl(var(--muted)); }
 .bg-muted\/50 { background-color: hsl(var(--muted) / .5); }
 .bg-popover { background-color: hsl(var(--popover)); }
-.bg-primary { background-color: hsl(var(--primary)); }
+.bg-primary { background-color: #348D35 }
 .bg-primary\/10 { background-color: hsl(var(--primary) / .1); }
 .bg-primary\/5 { background-color: hsl(var(--primary) / .05); }
 .bg-red-500\/10 { background-color: #ef44441a; }
