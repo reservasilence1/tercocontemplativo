@@ -900,7 +900,7 @@ mr-1 { margin-right: .25rem; }
 .bg-black\/80 { background-color: #000c; }
 .bg-border { background-color: hsl(var(--border)); }
 .bg-card { background-color: hsl(var(--card)); }
-.bg-dark { background-color: hsl(var(--dark)); }
+.bg-dark { background-color: #264A39 }
 .bg-destructive { background-color: hsl(var(--destructive)); }
 .bg-emerald-500\/10 { background-color: #10b9811a; }
 .bg-foreground { background-color: hsl(var(--foreground)); }
