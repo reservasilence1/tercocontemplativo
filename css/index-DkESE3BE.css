@@ -884,7 +884,7 @@ mr-1 { margin-right: .25rem; }
 .border-destructive { border-color: hsl(var(--destructive)); }
 .border-destructive\/50 { border-color: hsl(var(--destructive) / .5); }
 .border-input { border-color: hsl(var(--input)); }
-.border-primary { border-color: hsl(var(--primary)); }
+.border-primary { border-color: #348d35 }
 .border-primary-foreground\/10 { border-color: hsl(var(--primary-foreground) / .1); }
 .border-primary-foreground\/20 { border-color: hsl(var(--primary-foreground) / .2); }
 .border-primary-foreground\/40 { border-color: hsl(var(--primary-foreground) / .4); }
